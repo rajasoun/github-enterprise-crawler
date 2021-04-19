@@ -1,9 +1,10 @@
-# About 
+# About
 
-This project creates a `repos.json` that can be utilized by the [GitHub Repository Profiler](https://github.com/rajasoun/github-repository-profiler). 
+This project creates a `repos.json` that can be utilized by the [GitHub Repository Profiler](https://github.com/rajasoun/github-repository-profiler).
 
 The current approach assumes that the repos that you want to show in the portal are:
-1. available in a GitHub organization, and 
+
+1. available in a GitHub organization, and
 1. they all are tagged with a certain _topic_.
 
 ## Installation
