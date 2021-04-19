@@ -1,0 +1,16 @@
+{
+  "template": "https://github.com/rajasoun/cookiecutter-shift-left-security",
+  "commit": "7eaba4e257a1899c371c1d63c9bdf464f02fbafb",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "project_name": "github-enterprise-crawler",
+      "project_slug": "github-enterprise-crawler",
+      "project_description": "Automatic Profiler for GitHub Enterprise Repository",
+      "security_mailer": "devsecops@icloud.com",
+      "author_full_name": "Raja. S",
+      "_template": "https://github.com/rajasoun/cookiecutter-shift-left-security"
+    }
+  },
+  "directory": null
+}
