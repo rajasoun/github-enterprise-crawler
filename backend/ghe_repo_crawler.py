@@ -34,8 +34,55 @@ def load_secrets_from_dot_env():
     load_dotenv(dotenv_path)
     return os
 
+def log_user(gh_session):
+    print(gh_session.me())
+
+def crawl_repos_for_commit(gh_session,os):
+    """
+    Get Repositories for the GitHub Organization by Topic
+
+    Ensure Topic is configured with automatic-profiler
+    """
+    # Set the topic
+    topic = os.getenv("TOPIC")
+    organization = os.getenv("ORGANIZATION")
+
+    # Get all repos from organization
+    search_string = "org:{} topic:{}".format(organization, topic)
+    all_repos = gh_session.search_repositories(search_string)
+
+    repo_list = []
+    for repo in all_repos:
+        if repo is not None:
+            print("{0}".format(repo.repository))
+            full_repository = repo.repository.refresh()
+
+            repo_profile = repo.as_dict()
+            repo_profile["_InnerSourceMetadata"] = {}
+
+            # fetch repository participation
+            participation = repo.repository.weekly_commit_count()
+            repo_profile["_InnerSourceMetadata"]["participation"] = participation[
+                "all"
+            ]
+            # fetch repository topics
+            topics = repo.repository.topics()
+            repo_profile["_InnerSourceMetadata"]["topics"] = topics.names
+            repo_list.append(repo_profile)
+        return repo_list
+
+def convert_to_json(repo_list):
+    import json
+    # Write each repository to a repos.json file
+    with open("repos.json", "w") as f:
+        json.dump(repo_list, f, indent=4)
 
 if __name__ == "__main__":
     os = load_secrets_from_dot_env()
     gh_session = create_enterprise_session(os.getenv("GH_URL"), os.getenv("GH_TOKEN"))
-    print(gh_session.me())
+    log_user(gh_session)
+    repo_list = crawl_repos_for_commit(gh_session,os)
+    convert_to_json(repo_list)
+
+
+
