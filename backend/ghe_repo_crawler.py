@@ -30,14 +30,16 @@ def load_secrets_from_dot_env():
     from os.path import dirname, join
     from dotenv import load_dotenv
     # Load env variables from file
-    dotenv_path = join(dirname(__file__), ".env")
+    dotenv_path = join(dirname(__file__), "../.env")
     load_dotenv(dotenv_path)
     return os
+
 
 def log_user(gh_session):
     print(gh_session.me())
 
-def crawl_repos_for_commit(gh_session,os):
+
+def crawl_repos_for_commit(gh_session, os):
     """
     Get Repositories for the GitHub Organization by Topic
 
@@ -55,8 +57,7 @@ def crawl_repos_for_commit(gh_session,os):
     for repo in all_repos:
         if repo is not None:
             print("{0}".format(repo.repository))
-            full_repository = repo.repository.refresh()
-
+            repo.repository.refresh()
             repo_profile = repo.as_dict()
             repo_profile["_InnerSourceMetadata"] = {}
 
@@ -71,18 +72,18 @@ def crawl_repos_for_commit(gh_session,os):
             repo_list.append(repo_profile)
         return repo_list
 
+
 def convert_to_json(repo_list):
     import json
     # Write each repository to a repos.json file
     with open("repos.json", "w") as f:
         json.dump(repo_list, f, indent=4)
 
+
 if __name__ == "__main__":
     os = load_secrets_from_dot_env()
-    gh_session = create_enterprise_session(os.getenv("GH_URL"), os.getenv("GH_TOKEN"))
+    gh_session = create_enterprise_session(
+        os.getenv("GH_URL"), os.getenv("GH_TOKEN"))
     log_user(gh_session)
-    repo_list = crawl_repos_for_commit(gh_session,os)
+    repo_list = crawl_repos_for_commit(gh_session, os)
     convert_to_json(repo_list)
-
-
-
